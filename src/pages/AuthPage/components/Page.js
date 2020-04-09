@@ -1,60 +1,108 @@
 import React from "react";
-import {Modal, Button, InputGroup, FormControl} from "react-bootstrap";
+import {Modal, Button, Form} from "react-bootstrap";
 import {Link, withRouter} from "react-router-dom";
+import {store} from "../../../store/configureStore";
+import {changeUserSuccess} from "../../../shared/actions";
+import './page.css';
 
 
-export class Page extends React.Component {
+class AuthPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            show: true
+            show: true,
+            email: '',
+            password: '',
+            emailMessage: '',
+            passwordMessage: 'Your password must consist of 8 symbols at least.',
+            isButtonDisabled: true
         };
     }
 
-    handleClose = (event) => {
-        this.setState({show: false});
-        this.props.history.goBack();
+    handleClose = () => {
+        this.props.changeIsOpen();
+    };
+
+    handleEmailInput = (event) => {
+        this.setState({...this.state, email: event.target.value});
+    };
+
+    handlePasswordInput = (event) => {
+        if (event.target.value.length >= 8 && this.state.email)
+            this.setState({...this.state, password: event.target.value, isButtonDisabled: false});
+        else
+            this.setState({...this.state, password: event.target.value});
+    };
+
+    confirmAuth = async () => {
+        const user = {
+            email: this.state.email,
+            password: this.state.password,
+        };
+        const result = await this.props.loginUser(user);
+        console.log(result);
+        if (result.status === 200) {
+            localStorage.setItem('token', result.data.token);
+            store.dispatch(changeUserSuccess(result.data.user));
+            this.handleClose();
+            this.props.history.replace('/');
+        }
+        else {
+            this.setState({
+                ...this.state,
+                emailMessage: 'Invalid email or password',
+                email: '',
+                password: '',
+                isButtonDisabled: true
+            })
+            // store.dispatch(changeUserFailure(result.data));
+        }
     };
 
     render() {
         return (
-                <Modal show={this.state.show} onHide={this.handleClose}>
-                    <Modal.Header closeButton>
-                        <b>Sign In</b>
-                    </Modal.Header>
-
-                    <Modal.Body>
-                        <InputGroup className="mb-3">
-                            <InputGroup.Prepend>
-                                <InputGroup.Text id="username">Username</InputGroup.Text>
-                            </InputGroup.Prepend>
-                            <FormControl
-                                placeholder="Enter your username"
+            <Modal show={this.state.show} onHide={this.handleClose}>
+                <Modal.Header closeButton className='ModalHeader'>Sign In</Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group controlId="formBasicEmail">
+                            <Form.Label>Email address</Form.Label>
+                            <Form.Control type="email"
+                                          placeholder="Enter email"
+                                          value={this.state.email}
+                                          onChange={this.handleEmailInput}
                             />
-                        </InputGroup>
+                            <Form.Text className="text-muted">
+                                {this.state.emailMessage}
+                            </Form.Text>
+                        </Form.Group>
 
-                        <InputGroup className="mb-3">
-                            <InputGroup.Append>
-                                <InputGroup.Text id="password">Password</InputGroup.Text>
-                            </InputGroup.Append>
-                            <FormControl
-                                placeholder="Enter your password"
+                        <Form.Group controlId="formBasicPassword">
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control type="password"
+                                          placeholder="Password"
+                                          value={this.state.password}
+                                          onChange={this.handlePasswordInput}
                             />
-                        </InputGroup>
-                        <Link to='/register'>Don't have an account?</Link>
-                    </Modal.Body>
+                            <Form.Text className="text-muted">
+                                {this.state.passwordMessage}
+                            </Form.Text>
+                        </Form.Group>
+                    </Form>
+                    <Link to='/register'>Don't have an account?</Link>
+                </Modal.Body>
 
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={this.handleClose}>
-                            Close
-                        </Button>
-                        <Button variant="primary" onClick={this.handleClose}>
-                            Save Changes
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={this.handleClose}>
+                        Close
+                    </Button>
+                    <Button variant="primary" disabled={this.state.isButtonDisabled} onClick={this.confirmAuth}>
+                        Log In
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         );
     }
 }
 
-export default withRouter(Page);
+export default withRouter(AuthPage);

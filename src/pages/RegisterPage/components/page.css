@@ -1,0 +1,12 @@
+.registerContainer {
+    max-width: 50%;
+    margin-top: 2%;
+}
+
+h1 {
+    font-family: Arial;
+}
+
+.red-text {
+    color: darkred;
+}
