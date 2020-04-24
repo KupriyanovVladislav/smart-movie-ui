@@ -3,8 +3,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { store } from "../store/configureStore";
 import { Provider } from 'react-redux';
-import {Page as MainPage} from "../pages/MainPage/components/Page";
 import RegisterPageContainer from "../pages/RegisterPage/containers/RegisterPageContainer";
+import MainPageContainer from "../pages/MainPage/containers/MainPageContainer";
 
 
 class App extends Component {
@@ -13,7 +13,7 @@ class App extends Component {
         <Router>
           <div>
             <Provider store={store}>
-                <Route exact path='/' component={MainPage} />
+                <Route exact path='/' component={MainPageContainer} />
                 <Route exact path='/register' component={RegisterPageContainer}/>
             </Provider>
           </div>
