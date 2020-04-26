@@ -1,0 +1,22 @@
+.container {
+    max-width: 60%;
+    margin-top: 3%;
+}
+
+.spinner-grow {
+    position: absolute;
+    height: 70px;
+    width: 70px;
+    top: 40%;
+    left: 48%;
+}
+
+img {
+    opacity: 0.9;
+}
+
+h3 {
+    font-family: Arial;
+    font-weight: bold;
+    color: white;
+}

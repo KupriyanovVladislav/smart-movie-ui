@@ -4,6 +4,7 @@ import {Navbar as Nbar, Nav, FormControl, Form, Button, NavDropdown, NavLink} fr
 import AuthPageContainer from "../../pages/AuthPage/containers/AuthPageContainer";
 import {store} from "../../store/configureStore";
 import {clearUserData} from "../actions";
+import "./Navbar.css"
 
 
 class Navbar extends React.Component{
@@ -52,13 +53,10 @@ class Navbar extends React.Component{
             <Nbar bg='dark' variant='dark'>
                 <Nbar.Brand href='/'><b>SmartMovie</b></Nbar.Brand>
                 <Nav className="mr-auto">
-                    <Nav.Link href="#features">Features</Nav.Link>
-                    <Nav.Link href="#pricing">Pricing</Nav.Link>
+                    <Form inline>
+                        <FormControl type="text" placeholder="Search" className="searchInput" />
+                    </Form>
                 </Nav>
-                <Form inline>
-                    <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-                    <Button variant="outline-info" className="mr-sm-5">Search</Button>
-                </Form>
                 {this.props.user.email? this.logged_in_nav(this.props.user.email): this.logged_out_nav(this.state.isFetching)}
                 {this.state.isModalOpen && <AuthPageContainer changeIsOpen={this.handleButtonClick}/>}
             </Nbar>
