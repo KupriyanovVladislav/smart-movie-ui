@@ -1,8 +1,31 @@
-.searchInput {
-    min-width: 200%;
-    margin-left: 350%;
+.NavbarForm input {
+    width: 50%;
+    margin: 0;
 }
 
-/*.navbar-brand {*/
-/*   margin-left: 10%;*/
-/*}*/
+.navbar-brand {
+    margin-left: 4%;
+    font-size: 1.3rem;
+}
+
+.dropdown {
+    font-weight: bolder;
+    text-decoration: none;
+}
+
+.dropdown > a {
+    color: white;
+}
+
+.dropdown-item {
+    color: black;
+}
+
+.input-group {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.fa-film {
+    margin-right: 4%;
+}

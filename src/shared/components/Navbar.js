@@ -1,10 +1,12 @@
 import React from 'react';
 import {withRouter} from 'react-router-dom';
-import {Navbar as Nbar, Nav, FormControl, Form, Button, NavDropdown, NavLink} from 'react-bootstrap';
+import {Navbar as Nbar, Nav, FormControl, Form, Button, NavDropdown, NavLink, InputGroup} from 'react-bootstrap';
 import AuthPageContainer from "../../pages/AuthPage/containers/AuthPageContainer";
 import {store} from "../../store/configureStore";
 import {clearUserData} from "../actions";
 import "./Navbar.css"
+import { faSearch, faFilm } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
 class Navbar extends React.Component{
@@ -12,7 +14,8 @@ class Navbar extends React.Component{
         super(props);
         this.state = {
             isModalOpen: false,
-            isFetching: false
+            isFetching: false,
+            search: "",
         };
     }
 
@@ -22,6 +25,9 @@ class Navbar extends React.Component{
         }
     }
 
+    handleFormSeacrh = (e) => {
+        this.setState({...this.state, search: e.target.value});
+    };
 
     handleButtonClick = () => {
         this.setState({isModalOpen: !this.state.isModalOpen});
@@ -48,13 +54,27 @@ class Navbar extends React.Component{
         </Nav>
     )};
 
+    searchMovieByName = (e) => {
+        // e.preventDefault();
+        // console.log(BASIC_URL+`movies/searchByName/${this.state.search}`);
+        this.props.history.replace(`movies/searchByName/${this.state.search}`);
+    };
+
     render() {
         return (
             <Nbar bg='dark' variant='dark'>
-                <Nbar.Brand href='/'><b>SmartMovie</b></Nbar.Brand>
-                <Nav className="mr-auto">
-                    <Form inline>
-                        <FormControl type="text" placeholder="Search" className="searchInput" />
+                <Nbar.Brand href='/'><FontAwesomeIcon icon={faFilm}/><b>SmartMovie</b></Nbar.Brand>
+                <Nav className="mr-auto" style={{ width: '70%' }}>
+                    <Form style = {{ width: '100%'}} className='NavbarForm' onSubmit={this.searchMovieByName}>
+                        <InputGroup>
+                        <InputGroup.Prepend>
+                            <InputGroup.Text>
+                                <FontAwesomeIcon icon={faSearch}/>
+                            </InputGroup.Text>
+                        </InputGroup.Prepend>
+                        <FormControl type="text" placeholder="Search" value={this.state.search}
+                                     onChange={this.handleFormSeacrh} />
+                        </InputGroup>
                     </Form>
                 </Nav>
                 {this.props.user.email? this.logged_in_nav(this.props.user.email): this.logged_out_nav(this.state.isFetching)}

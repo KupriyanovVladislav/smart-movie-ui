@@ -1,7 +1,9 @@
 import React from "react";
-import {Container, Spinner, Image, Table, Row, Col} from "react-bootstrap";
+import {Container, Spinner, Image, Table, Row, Col, Button} from "react-bootstrap";
 import {BASIC_URL} from "../../../constants";
 import './MoviePage.css';
+import { faBookmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 class MoviePage extends React.Component{
     constructor(props) {
@@ -47,7 +49,8 @@ class MoviePage extends React.Component{
                 </Row>
                 <Row>
                     <Col lg={4}>
-                        <Image src={data.poster_path} thumbnail/>
+                        <Image src={data.poster_path} style={{ width: '80%'}} thumbnail/>
+                        <Button style={{ width: '80%'}} variant="outline-warning">Add to favourites <FontAwesomeIcon  icon={faBookmark}/></Button>
                     </Col>
                     <Col lg={8}>
                         <Table hover>
