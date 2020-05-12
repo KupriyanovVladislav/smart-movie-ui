@@ -5,7 +5,7 @@ import AuthPageContainer from "../../pages/AuthPage/containers/AuthPageContainer
 import {store} from "../../store/configureStore";
 import {clearUserData} from "../actions";
 import "./Navbar.css"
-import { faSearch, faFilm } from "@fortawesome/free-solid-svg-icons";
+import {faSearch, faFilm, faBookmark} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
@@ -42,6 +42,7 @@ class Navbar extends React.Component{
     logged_in_nav = (email) => {
         return (
         <NavDropdown title={email} id="basic-nav-dropdown">
+            <NavDropdown.Item href='/user/favorites/'>My favorites <FontAwesomeIcon icon={faBookmark}/></NavDropdown.Item>
             <NavDropdown.Divider />
             <NavDropdown.Item onClick={this.userLogOut} >Sign Out</NavDropdown.Item>
         </NavDropdown>
@@ -55,8 +56,6 @@ class Navbar extends React.Component{
     )};
 
     searchMovieByName = (e) => {
-        // e.preventDefault();
-        // console.log(BASIC_URL+`movies/searchByName/${this.state.search}`);
         this.props.history.replace(`movies/searchByName/${this.state.search}`);
     };
 
