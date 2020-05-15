@@ -1,6 +1,6 @@
 import React from 'react';
 import {withRouter} from 'react-router-dom';
-import {Navbar as Nbar, Nav, FormControl, Form, Button, NavDropdown, NavLink, InputGroup} from 'react-bootstrap';
+import {Navbar as Nbar, Nav, FormControl, Form, NavDropdown, NavLink, InputGroup} from 'react-bootstrap';
 import AuthPageContainer from "../../pages/AuthPage/containers/AuthPageContainer";
 import {store} from "../../store/configureStore";
 import {clearUserData} from "../actions";
@@ -64,7 +64,7 @@ class Navbar extends React.Component{
             <Nbar bg='dark' variant='dark'>
                 <Nbar.Brand href='/'><FontAwesomeIcon icon={faFilm}/><b>SmartMovie</b></Nbar.Brand>
                 <Nav className="mr-auto" style={{ width: '70%' }}>
-                    <Form style = {{ width: '100%'}} className='NavbarForm' onSubmit={this.searchMovieByName}>
+                    <Form style={{ width: '100%'}} className='NavbarForm' onSubmit={this.searchMovieByName}>
                         <InputGroup>
                         <InputGroup.Prepend>
                             <InputGroup.Text>

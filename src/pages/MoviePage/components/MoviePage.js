@@ -2,10 +2,12 @@ import React from "react";
 import {Container, Spinner, Image, Table, Row, Col, Button} from "react-bootstrap";
 import {BASIC_URL} from "../../../constants";
 import './MoviePage.css';
-import { faBookmark, faStar } from "@fortawesome/free-solid-svg-icons";
+import { faBookmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AuthPageContainer from "../../AuthPage/containers/AuthPageContainer";
 import SimilarMovies from "./SimilarMovies";
+import Rating from "./Rating";
+import getHeaders from "../../../utils";
 
 class MoviePage extends React.Component{
     constructor(props) {
@@ -21,17 +23,21 @@ class MoviePage extends React.Component{
 
     componentDidMount() {
         const movieId = this.props.movieId;
-        const token = localStorage.getItem('token');
-        let headers = {};
-        if (token) {
-            headers.Authorization = `JWT ${token}`;
-        }
+        const headers = getHeaders();
         fetch(BASIC_URL+`movies/${movieId}`, {
             method: 'GET',
             headers: headers,
         })
             .then(res => res.json())
-            .then(res => this.setState({isFetching: true, movie: res}));
+            .then(res => {
+                const fetchedRating = res.rating;
+                let rating = 0;
+                if (fetchedRating) {
+                    rating = fetchedRating;
+                }
+                this.setState({...this.state, isFetching: true, movie: res,
+                rating: rating, isFavorite: res.is_bookmark});
+            });
     }
 
     handleButtonClick = () => {
@@ -40,7 +46,7 @@ class MoviePage extends React.Component{
 
     getNamesCountries = (countries) => {
         let result = [];
-        countries.map(country => {result.push(country.name)});
+        countries.map(country => result.push(country.name));
         return result.join(', ')
     };
 
@@ -50,11 +56,7 @@ class MoviePage extends React.Component{
             return
         }
         const movieId = this.props.movieId;
-        const token = localStorage.getItem('token');
-        let headers = {'Content-Type': 'application/json'};
-        if (token) {
-            headers.Authorization = `JWT ${token}`;
-        }
+        const headers = getHeaders();
         const body = {
             movie_id: movieId
         };
@@ -67,10 +69,6 @@ class MoviePage extends React.Component{
             .then(res => this.setState({...this.state, isFavorite: true}));
     };
 
-    changeRating = (value) => {
-        this.setState({...this.state, rating: value});
-    };
-
     spinner = (<Spinner animation="grow" variant="dark" />);
 
     movieInfo = (data) => {
@@ -80,18 +78,6 @@ class MoviePage extends React.Component{
                 Add to favourites <FontAwesomeIcon  icon={faBookmark}/>
             </Button>
         );
-
-        let rating = () => {
-            const keys = [1, 2, 3, 4, 5];
-            const stars = keys.map((el) => {
-                return (
-                    <FontAwesomeIcon onMouseEnter={() => this.changeRating(el)} icon={faStar} key={el}
-                                     onMouseLeave={() => {this.setState({...this.state, rating: 0})}}
-                                        className={el <= this.state.rating?'checkedStar': 'uncheckedStar'}
-                                        size='3x'/>);
-            });
-            return stars
-        };
 
         if (this.state.isFavorite) {
             favElement = (<p>This movie is in your favorites</p>)
@@ -146,7 +132,8 @@ class MoviePage extends React.Component{
                 </Row>
                 <Row>
                     <Col>
-                        {rating()}
+                        <Rating rating={this.state.rating} modalHandler={this.handleButtonClick}
+                                user={this.props.user} movieId={this.props.movieId}/>
                     </Col>
                     <Col lg={8}>
                         {data.overview}
